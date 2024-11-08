@@ -24,34 +24,22 @@ import {
 function App() {
   const [recommendations, setRecommendations] = useState([]);
 
-  const fetchRecommendations = async (formData) => {
-    try {
-        const response = await fetch('/api/getRecommendations', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-        const data = await response.json();
-        setRecommendations(data); // Set recommendations from backend response
-    } catch (error) {
-        console.error('Error fetching recommendations:', error);
-    }
-};
-
-//   const [recommendations, setRecommendations] = useState([]);
-
-//     const recommendActivities = (preferences) => {
-//         const filteredActivities = data.filter(activity => {
-//             return (
-//                 activity.type.includes(preferences.type) &&
-//                 activity.duration === preferences.duration &&
-//                 activity.budget === preferences.budget
-//             );
+//   const fetchRecommendations = async (formData) => {
+//     try {
+//         const response = await fetch('http://localhost:3000/api/getRecommendations', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(formData)
 //         });
-//         setRecommendations(filteredActivities);
-//     };
+//         const data = await response.json();
+//         setRecommendations(data); // Set recommendations from backend response
+//     } catch (error) {
+//         console.error('Error fetching recommendations:', error);
+//     }
+// };
+
 
     
   return (
@@ -68,11 +56,11 @@ function App() {
         {/* <Route exact path="/api/recommend" element={<Recommendations/>} /> */}
         <Route 
                         path="/form" 
-                        element={<RecommendationForm onSubmit={fetchRecommendations} />} 
+                        element={<RecommendationForm/>} 
                     />
                     <Route 
                         path="/recommendations" 
-                        element={<Recommendations recommendations={recommendations} />} 
+                        element={<Recommendations />} 
                     />
         <Route path="/delhi" element={<Delhi />} />
         <Route path="/mumbai" element={<Mumbai />} />
@@ -83,15 +71,6 @@ function App() {
     </Router>
   );
 }
-// const Home = ({ recommendActivities }) => {
-//   const navigate = useNavigate();
 
-//   const handleFormSubmit = (preferences) => {
-//     recommendActivities(preferences);
-//     navigate('/recommendations'); // Navigate to the recommendations page
-//   };
-
-//   return <PreferenceForm onSubmit={handleFormSubmit} />;
-// };
 
 export default App;
