@@ -1,3 +1,157 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const RecommendationForm = () => {
+    const [formData, setFormData] = useState({
+        location: '',
+        budget: '',
+        duration: '',
+        ageGroup: '',
+        categories: []
+    });
+
+    const navigate = useNavigate();
+
+    // Update form data as the user types
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Handle checkbox selection for categories
+    const handleCheckboxChange = (e) => {
+        const { value, checked } = e.target;
+        setFormData((prevState) => {
+            const newCategories = checked
+                ? [...prevState.categories, value]
+                : prevState.categories.filter((category) => category !== value);
+            return { ...prevState, categories: newCategories };
+        });
+    };
+
+    // Submit form data to the backend
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await axios.post('http://localhost:3000/api/getRecommendations', formData);
+    //         console.log(response);
+    //         navigate('/recommendations', { state: { recommendations: response.data } });
+    //     } catch (error) {
+    //         console.error("Error fetching recommendations:", error);
+    //     }
+    // };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:3000/api/getRecommendations', formData);
+            navigate('/recommendations', { state: { recommendations: response.data } });
+        } catch (error) {
+            console.error("Error fetching recommendations:", error.response || error.message);
+        }
+    };
+
+    return (
+        <div className="recommendation-form-container">
+            <h2>Plan Your Day</h2>
+            <form onSubmit={handleSubmit} className="recommendation-form">
+                <label>
+                    Location:
+                    <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleChange}
+                        required
+                    />
+                </label>
+
+                <label>
+                    Budget:
+                    <input
+                        type="number"
+                        name="budget"
+                        value={formData.budget}
+                        onChange={handleChange}
+                        required
+                    />
+                </label>
+
+                <label>
+                    Duration (hours):
+                    <input
+                        type="number"
+                        name="duration"
+                        value={formData.duration}
+                        onChange={handleChange}
+                        required
+                    />
+                </label>
+
+                <label>
+                    Age Group:
+                    <select name="ageGroup" value={formData.ageGroup} onChange={handleChange} required>
+                        <option value="">Select Age Group</option>
+                        <option value="18-25">18-25</option>
+                        <option value="26-35">26-35</option>
+                        <option value="36-50">36-50</option>
+                        <option value="50+">50+</option>
+                    </select>
+                </label>
+
+                <fieldset>
+                    <legend>Categories:</legend>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="dining"
+                            checked={formData.categories.includes("dining")}
+                            onChange={handleCheckboxChange}
+                        />
+                        Dining
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="adventure"
+                            checked={formData.categories.includes("adventure")}
+                            onChange={handleCheckboxChange}
+                        />
+                        Adventure
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="entertainment"
+                            checked={formData.categories.includes("entertainment")}
+                            onChange={handleCheckboxChange}
+                        />
+                        Entertainment
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="culture"
+                            checked={formData.categories.includes("culture")}
+                            onChange={handleCheckboxChange}
+                        />
+                        Culture
+                    </label>
+                    {/* Add more categories as needed */}
+                </fieldset>
+
+                <button type="submit" className="submit-button">
+                    Get Recommendations
+                </button>
+            </form>
+        </div>
+    );
+};
+
+export default RecommendationForm;
+
+
+
 // // RecommendationForm.js
 // import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
@@ -228,76 +382,92 @@
 
 
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import axios from 'axios';
 
-const RecommendationForm = ({ onSubmit }) => {
-    const [location, setLocation] = useState('');
-    const [budget, setBudget] = useState('');
-    const [duration, setDuration] = useState('');
-    const [ageGroups, setAgeGroups] = useState([]);
-    const [category, setCategory] = useState('');
+// // const RecommendationForm = ({ onSubmit }) => {
+//     // const [location, setLocation] = useState('');
+//     // const [budget, setBudget] = useState('');
+//     // const [duration, setDuration] = useState('');
+//     // const [ageGroups, setAgeGroups] = useState([]);
+//     // const [category, setCategory] = useState('');
+//     const RecommendationForm = () => {
+//         const [formData, setFormData] = useState({
+//             location: '',
+//             budget: '',
+//             duration: '',
+//             ageGroup: '',
+//             categories: [],
+//         });
+        
 
 
 
-    const navigate = useNavigate();
+//     const navigate = useNavigate();
 
-    // Age group options
-    const ageGroupOptions = ['18-25', '26-40', '41-65', '65 and above'];
+//     // Age group options
+//     const ageGroupOptions = ['18-25', '26-40', '41-65', '65 and above'];
 
-    // Handle age group checkboxes
-    const handleAgeGroupChange = (ageGroup) => {
-        setAgeGroups(prev => 
-            prev.includes(ageGroup)
-                ? prev.filter(item => item !== ageGroup)
-                : [...prev, ageGroup]
-        );
-    };
+//     // Handle age group checkboxes
+//     const handleAgeGroupChange = (ageGroup) => {
+//         setAgeGroups(prev => 
+//             prev.includes(ageGroup)
+//                 ? prev.filter(item => item !== ageGroup)
+//                 : [...prev, ageGroup]
+//         );
+//     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit({ location, budget, duration, ageGroups, category });
-        navigate('/recommendations');
-    };
+//     const handleSubmit = async(e) => {
+//         e.preventDefault();
+//         //onSubmit({ location, budget, duration, ageGroups, category });
+//         try {
+//             const response = await axios.post('http://localhost:5000/api/recommend', formData);
+//             navigate('/api/getRecommendations', { state: { recommendations: response.data } });
+//         } catch (error) {
+//             console.error("Error fetching recommendations:", error);
+//         }
+//         // navigate('/api/getRecommendations');
+//     };
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Location:</label>
-                <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-            </div>
-            <div>
-                <label>Budget:</label>
-                <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} required />
-            </div>
-            <div>
-                <label>Duration (hours):</label>
-                <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} required />
-            </div>
-            <div>
-                <label>Age Groups:</label>
-                {ageGroupOptions.map((group) => (
-                    <label key={group}>
-                        <input
-                            type="checkbox"
-                            value={group}
-                            onChange={() => handleAgeGroupChange(group)}
-                            checked={ageGroups.includes(group)}
-                        />
-                        {group}
-                    </label>
-                ))}
-            </div>
-            <div>
-                <label>Category (optional):</label>
-                <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
-            </div>
-            <button type="submit">Get Recommendations</button>
-        </form>
-    );
-};
+//     return (
+//         <form onSubmit={handleSubmit}>
+//             <div>
+//                 <label>Location:</label>
+//                 <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+//             </div>
+//             <div>
+//                 <label>Budget:</label>
+//                 <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} required />
+//             </div>
+//             <div>
+//                 <label>Duration (hours):</label>
+//                 <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} required />
+//             </div>
+//             <div>
+//                 <label>Age Groups:</label>
+//                 {ageGroupOptions.map((group) => (
+//                     <label key={group}>
+//                         <input
+//                             type="checkbox"
+//                             value={group}
+//                             onChange={() => handleAgeGroupChange(group)}
+//                             checked={ageGroups.includes(group)}
+//                         />
+//                         {group}
+//                     </label>
+//                 ))}
+//             </div>
+//             <div>
+//                 <label>Category (optional):</label>
+//                 <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
+//             </div>
+//             <button type="submit">Get Recommendations</button>
+//         </form>
+//     );
+// };
 
-export default RecommendationForm;
+// export default RecommendationForm;
 
 
 
